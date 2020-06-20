@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+.inside-triangle-up {
+	width: 0;
+	height: 0;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+	border-bottom: 32px solid blue;
+	border-top: 13px solid transparent;
+	margin-left:-16px;
+}
+
+.inside-triangle-down {
+	width: 0;
+	height: 0;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+	border-top: 32px solid blue;
+	border-bottom: 13px solid transparent;
+	margin-left:-16px;
+	margin-top:-44px;
+}
+
+.triangle-up {
+	width: 0;
+	height: 0;
+	border-left: 25px solid transparent;
+	border-right: 25px solid transparent;
+	border-bottom: 50px solid #555;
+}
+
+.triangle-down {
+	width: 0;
+	height: 0;
+	border-left: 25px solid transparent;
+	border-right: 25px solid transparent;
+	border-top: 50px solid #555;
+	
+}
+
+.triangle-left {
+	width: 0;
+	height: 0;
+	border-top: 25px solid transparent;
+	border-right: 50px solid #555;
+	border-bottom: 25px solid transparent;
+}
+
+.triangle-right {
+	width: 0;
+	height: 0;
+	border-top: 25px solid transparent;
+	border-left: 50px solid #555;
+	border-bottom: 25px solid transparent;
+}
+
+.square {
+  height: 38px;
+  width: 38px;
+  background-color: #555;
+  padding:6px;
+}
+
+.inside-square {
+  height: 38px;
+  width: 38px;
+  background-color: red;
+  
+}
+
+
+.circle {
+  height: 38px;
+  width: 38px;
+  background-color: #555;
+  border-radius: 50%;
+  padding:6px;
+}
+
+.inside-circle {
+  height: 38px;
+  width: 38px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+
+
+.diamond {
+      width: 0;
+      height: 0;
+      border: 25px solid transparent;
+      border-bottom-color: red;
+      position: relative;
+      top: -25px;
+}
+
+.diamond:after {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 25px;
+      width: 0;
+      height: 0;
+      border: 25px solid transparent;
+      border-top-color: red;
+}
+
+.inside-diamond {
+      width: 0;
+      height: 0;
+      border: 16px solid transparent;
+      border-bottom-color: yellow;
+      position: relative;
+      top: -7px;
+	  left:-16px;
+}
+
+.inside-diamond:after {
+      content: '';
+      position: absolute;
+      left: -16px;
+      top: 16px;
+      width: 0;
+      height: 0;
+      border: 16px solid transparent;
+      border-top-color: yellow;
+	  z-index: 1;
+}
+
+</style>
+
+</head>
+
+
+
+
+
+
+
+
+<body>
+
+<table style="border-width:2px;border-style:solid;">
+	<tr>
+		<td id="1">
+			<div class="triangle-up"><div class="inside-triangle-up"></div></div>
+		</td>
+		<td id="2"> 
+			<div class="triangle-down"><div class="inside-triangle-down"></div></div>  
+		</td>
+	</tr>
+	
+	<tr>
+		<td id="3">
+			<div class="diamond"><div class="inner-diamond"></div></div>
+		</td>
+		<td id="4">
+			<div class="circle"><div class="inside-circle"></div></div>
+			<!--div class="square"><div class="inside-square"></div></div-->
+		</td>
+	</tr>
+
+</table>
+
+
+
+<script>
+// add random shape, random inner shape, random colors of background and shape and inner shape
+window.addEventListener("DOMContentLoaded", function() {
+      
+	var basicshape="<div class='basic-shape'>_replace_inner_shape_</div>"
+	var innershape="<div class='inner-shape'></div>"
+	var shapes=['triangle-up','triangle-down','triangle-left','triangle-right','square','circle','diamond']
+	var colors=['red','blue','black','white','green','pink','yellow']
+
+	for(var jj=1;jj<5;jj++){
+		var tdii=jj.toString();
+		console.log(tdii)
+		
+		var randshape=Math.floor(Math.random() * shapes.length); 
+		var randcolor=Math.floor(Math.random() * colors.length); 
+		var randbackgroundcolor=Math.floor(Math.random() * colors.length); 
+		var randinnershape=Math.floor(Math.random()*2); 
+		
+		var tmpshape=basicshape.replace('basic-shape',shapes[randshape]);
+		
+		if(randinnershape>0){
+			tmpshape=tmpshape.replace('_replace_inner_shape_',innershape.replace('inner-shape','inside-'+shapes[randshape]));
+		}
+		else {
+			tmpshape=tmpshape.replace('_replace_inner_shape_','')
+		}
+		
+		document.getElementById(tdii).innerHTML=tmpshape;
+		
+		console.log(shapes[randshape])
+		
+		if(shapes[randshape]=='square' || shapes[randshape]=='circle'){
+		
+			document.getElementById(tdii).getElementsByTagName("div")[0].style.backgroundColor=colors[randcolor];
+		}
+		else{
+		
+			
+			// update color and background color:
+			var basic_shape_div=document.getElementById(tdii).getElementsByTagName("div")[0];
+			var style=window.getComputedStyle(basic_shape_div);
+			
+			if(style.borderLeftColor!="rgba(0, 0, 0, 0)" && style.borderLeftColor!="rgb(0, 0, 0)"){
+				//console.log(style.borderLeftColor.toString(),"rgba(0,0,0,0)","rgb(0,0,0)");
+				document.getElementById(tdii).getElementsByTagName("div")[0].style.borderLeftColor=colors[randcolor];
+				//console.log(colors[randcolor]);
+			}
+			
+			if(style.borderRightColor!="rgba(0, 0, 0, 0)" && style.borderRightColor!="rgb(0, 0, 0)"){
+				document.getElementById(tdii).getElementsByTagName("div")[0].style.borderRightColor=colors[randcolor];
+			}
+			if(style.borderTopColor!="rgba(0, 0, 0, 0)" && style.borderTopColor!="rgb(0, 0, 0)"){
+				document.getElementById(tdii).getElementsByTagName("div")[0].style.borderTopColor=colors[randcolor];
+			}
+			if(style.borderBottomColor!="rgba(0, 0, 0, 0)" && style.borderBottomColor!="rgb(0, 0, 0)"){
+				document.getElementById(tdii).getElementsByTagName("div")[0].style.borderBottomColor=colors[randcolor];
+			}
+			// background
+			document.getElementById(tdii).style.backgroundColor=colors[randbackgroundcolor];
+		}
+		
+		// inner shape
+		
+		if(randinnershape>0){
+		
+		
+			if(shapes[randshape]=='square' || shapes[randshape]=='circle'){
+			
+				document.getElementById(tdii).getElementsByTagName("div")[0].getElementsByTagName("div")[0].style.backgroundColor=colors[randbackgroundcolor];
+			}
+			else{
+			
+			
+				var inner_shape_div=document.getElementById(tdii).getElementsByTagName("div")[0].getElementsByTagName("div")[0];
+				var style=window.getComputedStyle(inner_shape_div);
+				
+				
+				if(style.borderLeftColor!="rgba(0, 0, 0, 0)" && style.borderLeftColor!="rgb(0, 0, 0)"){
+					document.getElementById(tdii).getElementsByTagName("div")[0].getElementsByTagName("div")[0].style.borderLeftColor=colors[randbackgroundcolor];
+				}
+				if(style.borderRightColor!="rgba(0, 0, 0, 0)" && style.borderRightColor!="rgb(0, 0, 0)"){
+					document.getElementById(tdii).getElementsByTagName("div")[0].getElementsByTagName("div")[0].style.borderRightColor=colors[randbackgroundcolor];
+				}
+				if(style.borderTopColor!="rgba(0, 0, 0, 0)" && style.borderTopColor!="rgb(0, 0, 0)"){
+					document.getElementById(tdii).getElementsByTagName("div")[0].getElementsByTagName("div")[0].style.borderTopColor=colors[randbackgroundcolor];
+				}
+				if(style.borderBottomColor!="rgba(0, 0, 0, 0)" && style.borderBottomColor!="rgb(0, 0, 0)"){
+					document.getElementById(tdii).getElementsByTagName("div")[0].getElementsByTagName("div")[0].style.borderBottomColor=colors[randbackgroundcolor];
+				}
+			}
+		}
+		
+		
+	}
+
+
+  }, false);
+
+
+</script>
+
+</body>
+</html> 
