@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+table {
+
+	  border-width:2px;
+	  border-style:solid;
+	  border-spacing:1px;
+	  font-family: consolas, "courier new", monospace;
+}
+
+h2 {
+font-family: Arial;
+}
+
+b {
+	padding:0px 2px 0px 2px;
+    text-shadow: -1px 1px 0px rgb(255, 255, 255); 
+}
+
+</style>
+
+</head>
+
+
+
+
+
+
+
+
+<body>
+<h2>User id's like PIRATE and PlRATE may look similar to human eye, but presented as graphical icon should be more distinguishable..</h2>
+
+<input id='input' value='PIRATE'/>
+<button id='button'>GO</button>
+<p></p>
+<table>
+	<tr>
+		<td id="1">		</td>
+		<td id="2"> 		</td>
+	</tr>
+	
+	<tr>
+		<td id="3">		</td>
+		<td id="4">		</td>
+	</tr>
+
+</table>
+<p></p>
+<table >
+	<tr>
+		<td id="5">		</td>
+		<td id="6"> 		</td>
+
+		<td id="7">		</td>
+		<td id="8">		</td>
+	</tr>
+
+</table>
+
+
+<script src='BigInteger.js'></script>
+<script>
+
+function charArray(){
+
+	var abc1=["q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m"];
+	var abc2=["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M"]
+	//var sp_ace=[" "];
+	var nums=["1","2","3","4","5","6","7","8","9","0"];
+	var special=["-","=","+","_","!","@","#","$","%","^","&","*","(",")","<",">",".",",","\\","|","~","`","?","'","\"","[","]","{","}","/",";",":"];
+	
+	return abc1.concat(abc2,nums,special); 
+}
+
+function calc_big_int_from_str(str_base_input) { //, allowed_chars_arr){
+	
+	var allowed_chars_arr=charArray()
+	var base_ints=[];
+	var base_str=allowed_chars_arr.join('')   ;
+	for(var lkj=0;lkj<str_base_input.length;lkj++) base_ints.push( base_str.indexOf(str_base_input.charAt(lkj)) );
+	
+	var tmp_base=allowed_chars_arr.length;
+	var tmp_val=bigInt(0);
+	
+	for(var ij=0;ij<base_ints.length;ij++){
+
+		tmp_val=tmp_val.times(bigInt(tmp_base) );
+		tmp_val=tmp_val.plus( bigInt(base_ints[ij]) );
+	}
+
+	return tmp_val;
+}
+
+function mybase(){
+
+	return ['A','Q','W','E','R','T','Y','U','I','O','P','S','D','F','G','H','J','K','L','M','N','Z','X','C','V','B','1','2','3','4','5','6','7','8','9']
+}
+
+
+function str_base88_to_mybaseint(str_base88_input){
+	
+	var quotient_and_remainder;
+	var tmp_cbii=calc_big_int_from_str(str_base88_input); //, allowed_chars_arr);
+	
+	var base_ints=[];
+	var base_str=mybase();
+	//var str_base=[];
+	
+	while( tmp_cbii.valueOf() > bigInt(0) ){
+		
+		quotient_and_remainder=tmp_cbii.divmod( base_str.length );
+	    tmp_cbii=quotient_and_remainder.quotient;
+		var base_ii_int=quotient_and_remainder.remainder.valueOf();
+		base_ints.push(base_ii_int)
+		//str_base.push( base_str.charAt(base_ii_int) );
+	}
+	
+	
+	return base_ints; //str_base.join('');
+}
+
+function create_icon(){
+
+	var sel_word=document.getElementById("input").value;
+	sel_word+='ZZZZZZZZZZZZZZZZZZ'; // in case user input too short
+	
+	var inthash=str_base88_to_mybaseint(sel_word);
+
+	//console.log()
+
+	var selected_chars=mybase();//['A','Q','W','E','R','T','Y','U','I','O','P','S','D','F','G','H','J','K','L','M','N','Z','X','C','V','B','1','2','3','4','5','6','7','8','9']
+	//var selected_color=['red','blue','black','green','magenta','orange','white'];
+
+	
+	var rr=0;
+	for(var jj=1;jj<5;jj++){
+	
+		var tdii=jj.toString();
+		
+		var randshape=inthash[rr++]  ;//Math.floor(Math.random() * selected_chars.length); 
+		//rr++;
+		//var randcolor=inthash[rr]%selected_color.length  ;//Math.floor(Math.random() * selected_color.length); 
+		//rr++;
+		
+		var red=((inthash[rr++]*8)%256);
+		var green=((inthash[rr++]*8)%256) ;
+		var blue=((inthash[rr++]*8)%256) ;
+		var rgb="rgb("+red.toString()+","+green.toString()+","+blue.toString()+")";
+		console.log(rgb);
+		
+		//var randbackgroundcolor=inthash[rr]%(selected_color.length) ;//Math.floor(Math.random() * (selected_color.length-1));
+		//rr++;
+		
+		//if(randbackgroundcolor==randcolor) randbackgroundcolor++;
+		
+		document.getElementById(tdii).innerHTML="<b>"+selected_chars[randshape]+"</b>";
+		//console.log(red+green+blue);
+		
+		document.getElementById(tdii).style.backgroundColor=rgb;
+		
+		//flat version
+		document.getElementById( (jj+4).toString()).innerHTML="<b>"+selected_chars[randshape]+"</b>";
+		document.getElementById( (jj+4).toString()).style.backgroundColor=rgb;
+		
+		if(red+green+blue<440 && green<130) {
+			document.getElementById(tdii).innerHTML="<b style='color:white'>"+selected_chars[randshape]+"</b>";
+			
+			document.getElementById((jj+4).toString()).innerHTML="<b style='color:white'>"+selected_chars[randshape]+"</b>";
+			
+			var tmpelem=document.getElementById(tdii).getElementsByTagName("b")[0];
+			var style=window.getComputedStyle(tmpelem);
+			var newshadow=style.textShadow.replace('255','0').replace('255','0').replace('255','0')
+			
+			document.getElementById(tdii).getElementsByTagName("b")[0].style.textShadow=newshadow;
+			document.getElementById((jj+4)).getElementsByTagName("b")[0].style.textShadow=newshadow;
+		}
+		
+		/*if(selected_color[randcolor]=='white' || selected_color[randbackgroundcolor]=='white') {
+		
+			var tmpelem=document.getElementById(tdii).getElementsByTagName("b")[0]
+			var style=window.getComputedStyle(tmpelem);
+			var newshadow=style.textShadow.replace('255','128').replace('255','128').replace('255','128')
+			
+			document.getElementById(tdii).getElementsByTagName("b")[0].style.textShadow=newshadow;
+			document.getElementById((jj+4)).getElementsByTagName("b")[0].style.textShadow=newshadow;
+		}*/
+	}
+
+
+
+}
+
+document.getElementById("button").addEventListener("click",  create_icon );
+
+</script>
+
+</body>
+</html> 
